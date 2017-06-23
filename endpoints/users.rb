@@ -4,6 +4,6 @@ class UsersApp < Sinatra::Base
   end
 
   get '/users/test' do
-    [400, {'custom-header'=>'value'}, ['Test Value']]
+    [200, {'custom-header'=>'value'}, ['Test Values']]
   end
 end
