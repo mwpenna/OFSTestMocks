@@ -3,4 +3,5 @@ source 'https://rubygems.org' do
     gem 'json'
     gem 'factory_girl'
     gem 'pry'
+    gem 'faker'
 end
