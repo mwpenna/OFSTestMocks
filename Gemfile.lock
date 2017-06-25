@@ -37,10 +37,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  factory_girl
-  json
-  pry
-  sinatra
+  factory_girl!
+  json!
+  pry!
+  sinatra!
 
 BUNDLED WITH
    1.12.5

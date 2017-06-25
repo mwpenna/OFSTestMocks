@@ -1,4 +1,6 @@
 require 'pry'
+require 'factory_girl'
+require_relative 'support/env'
 
 class UsersApp < Sinatra::Base
 
@@ -11,10 +13,17 @@ class UsersApp < Sinatra::Base
   end
 
   get '/users/authenticate' do
-    [@authenticateResponseStatus.to_i, [@authenticateResponseMessage]]
+    authHeader = request.env["HTTP_AUTHORIZATION"]
+    if(authHeader.nil? || !(authHeader.include? "Bearer"))
+      return [403]
+    end
+
+    binding.pry
+
+    [@authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [@authenticateResponseMessage]]
   end
 
-  post '/users/authenticate' do
+  post '/users/authenticate/status' do
     [200]
   end
 
@@ -31,6 +40,10 @@ class UsersApp < Sinatra::Base
   end
 
   before do
+
+    if(@users == nil)
+      @users = []
+    end
 
     if(@authenticateResponseStatus == nil)
       @authenticateResponseStatus = 200
