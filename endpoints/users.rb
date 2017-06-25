@@ -13,11 +13,33 @@ class UsersApp < Sinatra::Base
   end
 
   get '/users/authenticate' do
+
+    if(@authenticateResponseStatus != 200)
+      return [@authenticateResponseStatus.to_i, [@authenticateResponseMessage]]
+    end
+
     authHeader = request.env["HTTP_AUTHORIZATION"]
     if(authHeader.nil? || !(authHeader.include? "Bearer"))
       return [403]
     end
 
+    #Return JWT Subject from User if user exists
+
+
+    #User does not exists
+    #Create new company for user
+    base_uri = YAML.load(File.read("#{$PROJECT_ROOT}/endpoints/config/test_mock_service.yml"))[ENV['ENVIRONMENT']][:base_uri]
+    companyId = SecureRandom.uuid
+    company = FactoryGirl.build(:company, href: base_uri + "compnay/id/" + companyId, id: companyId)
+    @companies[companyId]=company
+
+    #Create new user
+
+
+    #Create JWT Subject From User
+
+
+    #Return JWT Subject with 200 status
     binding.pry
 
     [@authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [@authenticateResponseMessage]]
@@ -42,7 +64,11 @@ class UsersApp < Sinatra::Base
   before do
 
     if(@users == nil)
-      @users = []
+      @users = Hash.new
+    end
+
+    if(@companies == nil)
+      @companies = Hash.new
     end
 
     if(@authenticateResponseStatus == nil)

@@ -1,0 +1,4 @@
+local:
+  :base_uri: http://localhost:4567
+ci:
+  :base_uri: http://someuri:4567
