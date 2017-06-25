@@ -11,6 +11,8 @@ FactoryGirl.define do
     userName "fname.lname"
     password "password"
     emailAddress "something@something.com"
+    id "123"
+    token "token"
   end
 
 end

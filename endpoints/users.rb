@@ -30,11 +30,16 @@ class UsersApp < Sinatra::Base
     #Create new company for user
     base_uri = YAML.load(File.read("#{$PROJECT_ROOT}/endpoints/config/test_mock_service.yml"))[ENV['ENVIRONMENT']][:base_uri]
     companyId = SecureRandom.uuid
-    company = FactoryGirl.build(:company, href: base_uri + "compnay/id/" + companyId, id: companyId)
+    companyHref = base_uri + "company/id/" + companyId
+    company = FactoryGirl.build(:company, href: companyHref, id: companyId)
     @companies[companyId]=company
 
     #Create new user
-
+    name = Faker::Pokemon.name + (SecureRandom.random_number(999) + 1000).to_s
+    email = name + "@pokemon.com"
+    userId = SecureRandom.uuid
+    user = FactoryGirl.build(:user, id: userId, token: authHeader.split('Bearer ')[1], userName: name, emailAddress: email, company_href: companyHref, company_name: company.name)
+    @users[user.id]=user
 
     #Create JWT Subject From User
 
