@@ -4,6 +4,11 @@ require_relative 'support/env'
 
 class UsersApp < Sinatra::Base
 
+  users = {}
+  companies = {}
+  authenticateResponseStatus = 200
+  authenticateResponseMessage = ''
+
   get '/users' do
     "Hello, World!"
   end
@@ -14,8 +19,8 @@ class UsersApp < Sinatra::Base
 
   get '/users/authenticate' do
 
-    if(@authenticateResponseStatus != 200)
-      return [@authenticateResponseStatus.to_i, [@authenticateResponseMessage]]
+    if(authenticateResponseStatus != 200)
+      return [authenticateResponseStatus.to_i, [authenticateResponseMessage]]
     end
 
     authHeader = request.env["HTTP_AUTHORIZATION"]
@@ -24,30 +29,24 @@ class UsersApp < Sinatra::Base
     end
 
     #Return JWT Subject from User if user exists
+    authToken = authHeader.split('Bearer ')[1]
+    binding.pry
 
-
-    #User does not exists
-    #Create new company for user
     base_uri = YAML.load(File.read("#{$PROJECT_ROOT}/endpoints/config/test_mock_service.yml"))[ENV['ENVIRONMENT']][:base_uri]
     companyId = SecureRandom.uuid
     companyHref = base_uri + "company/id/" + companyId
     company = FactoryGirl.build(:company, href: companyHref, id: companyId)
-    @companies[companyId]=company
+    companies[companyId]=company
 
-    #Create new user
     name = Faker::Pokemon.name + (SecureRandom.random_number(999) + 1000).to_s
     email = name + "@pokemon.com"
     userId = SecureRandom.uuid
-    user = FactoryGirl.build(:user, id: userId, token: authHeader.split('Bearer ')[1], userName: name, emailAddress: email, company_href: companyHref, company_name: company.name)
-    @users[user.id]=user
+    user = FactoryGirl.build(:user, href:base_uri + "users/id/" + userId, id: userId, token: authToken, userName: name, emailAddress: email, company_href: companyHref, company_name: company.name)
+    users[user.id]=user
 
-    #Create JWT Subject From User
+    jwtSubject = FactoryGirl.build(:jwtsubject, href: user.href, companyHref: company.href, firstName: user.firstName, lastName: user.lastName, role: user.role, userName: user.userName, emailAddress: user.emailAddress)
 
-
-    #Return JWT Subject with 200 status
-    binding.pry
-
-    [@authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [@authenticateResponseMessage]]
+    [200, {'Content-Type'=>'application/json'}, jwtSubject.to_json]
   end
 
   post '/users/authenticate/status' do
@@ -64,24 +63,5 @@ class UsersApp < Sinatra::Base
         userName: "userName",
         emailAddress: "me@me.com",
     }.to_json
-  end
-
-  before do
-
-    if(@users == nil)
-      @users = Hash.new
-    end
-
-    if(@companies == nil)
-      @companies = Hash.new
-    end
-
-    if(@authenticateResponseStatus == nil)
-      @authenticateResponseStatus = 200
-    end
-
-    if(@authenticateResponseMessage == nil)
-      @authenticateResponseMessage = defaultJwtSubject
-    end
   end
 end

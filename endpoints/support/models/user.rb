@@ -1,10 +1,11 @@
 class User
 
   attr_accessor :id, :firstName, :lastName, :role, :userName, :password,
-                :emailAddress, :token, :tokenExpDate, :activeFlag, :company_href, :company_name, :userHref
+                :emailAddress, :token, :tokenExpDate, :activeFlag, :company_href, :company_name, :href
 
   def to_json
     {
+        href: self.href,
         id: self.id,
         firstName: self.firstName,
         lastName: self.lastName,
@@ -24,7 +25,7 @@ class User
 
   def to_hash
     {
-        href: self.userHref,
+        href: self.href,
         id: self.id,
         firstName: self.firstName,
         lastName: self.lastName,

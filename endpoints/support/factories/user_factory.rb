@@ -13,6 +13,7 @@ FactoryGirl.define do
     emailAddress "something@something.com"
     id "123"
     token "token"
+    href "http://localhost:8080/users/id/123"
   end
 
 end

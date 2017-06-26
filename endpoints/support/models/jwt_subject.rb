@@ -1,5 +1,5 @@
 class JWTSubject
-  attr_accessor  :href, :companyHref, :firstName, :lastName, :role, :userName, :emailAddress,
+  attr_accessor  :href, :companyHref, :firstName, :lastName, :role, :userName, :emailAddress
 
   def to_json
     {
@@ -9,7 +9,7 @@ class JWTSubject
         lastName: self.lastName,
         role: self.role,
         userName: self.userName,
-        emailAddress: self.emailAddress,
+        emailAddress: self.emailAddress
     }.to_json
   end
 
