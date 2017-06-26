@@ -9,14 +9,6 @@ class UsersApp < Sinatra::Base
   authenticateResponseStatus = 200
   authenticateResponseMessage = nil
 
-  get '/users' do
-    "Hello, World!"
-  end
-
-  get '/users/test' do
-    [200, {'custom-header'=>'value'}, ['Test Values']]
-  end
-
   get '/users/authenticate' do
 
     if(authenticateResponseStatus != 200 || authenticateResponseMessage != nil)
@@ -28,7 +20,6 @@ class UsersApp < Sinatra::Base
       return [403]
     end
 
-    #Return JWT Subject from User if user exists
     authToken = authHeader.split('Bearer ')[1]
 
     users.each do |key,user|
