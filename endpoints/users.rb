@@ -9,10 +9,17 @@ class UsersApp < Sinatra::Base
   authenticateResponseStatus = 200
   authenticateResponseMessage = nil
 
+  get '/users/clear' do
+    users = {}
+    companies = {}
+    authenticateResponseStatus = 200
+    authenticateResponseMessage = nil
+  end
+
   get '/users/authenticate' do
 
     if(authenticateResponseStatus != 200 || authenticateResponseMessage != nil)
-      return [authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [authenticateResponseMessage]]
+      return [authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [authenticateResponseMessage.to_json]]
     end
 
     authHeader = request.env["HTTP_AUTHORIZATION"]
