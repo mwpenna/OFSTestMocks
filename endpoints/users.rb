@@ -37,7 +37,7 @@ class UsersApp < Sinatra::Base
         return [200, {'Content-Type'=>'application/json'}, jwtSubject.to_json]
       end
     end
-    
+
     base_uri = YAML.load(File.read("#{$PROJECT_ROOT}/endpoints/config/test_mock_service.yml"))[ENV['ENVIRONMENT']][:base_uri]
     companyId = SecureRandom.uuid
     companyHref = base_uri + "company/id/" + companyId
@@ -56,6 +56,9 @@ class UsersApp < Sinatra::Base
   end
 
   post '/users/authenticate/status' do
+    statusRequest = request.env["rack.request.form_hash"]
+    authenticateResponseStatus = statusRequest["status"]
+    authenticateResponseMessage = statusRequest["message"]
     [200]
   end
 
