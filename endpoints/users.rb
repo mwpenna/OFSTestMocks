@@ -30,8 +30,14 @@ class UsersApp < Sinatra::Base
 
     #Return JWT Subject from User if user exists
     authToken = authHeader.split('Bearer ')[1]
-    binding.pry
 
+    users.each do |key,user|
+      if(users[key].token == authToken)
+        jwtSubject = FactoryGirl.build(:jwtsubject, href: user.href, companyHref: user.company_href, firstName: user.firstName, lastName: user.lastName, role: user.role, userName: user.userName, emailAddress: user.emailAddress)
+        return [200, {'Content-Type'=>'application/json'}, jwtSubject.to_json]
+      end
+    end
+    
     base_uri = YAML.load(File.read("#{$PROJECT_ROOT}/endpoints/config/test_mock_service.yml"))[ENV['ENVIRONMENT']][:base_uri]
     companyId = SecureRandom.uuid
     companyHref = base_uri + "company/id/" + companyId
