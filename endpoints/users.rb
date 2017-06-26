@@ -7,7 +7,7 @@ class UsersApp < Sinatra::Base
   users = {}
   companies = {}
   authenticateResponseStatus = 200
-  authenticateResponseMessage = ''
+  authenticateResponseMessage = nil
 
   get '/users' do
     "Hello, World!"
@@ -19,8 +19,8 @@ class UsersApp < Sinatra::Base
 
   get '/users/authenticate' do
 
-    if(authenticateResponseStatus != 200)
-      return [authenticateResponseStatus.to_i, [authenticateResponseMessage]]
+    if(authenticateResponseStatus != 200 || authenticateResponseMessage != nil)
+      return [authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [authenticateResponseMessage]]
     end
 
     authHeader = request.env["HTTP_AUTHORIZATION"]
@@ -60,17 +60,5 @@ class UsersApp < Sinatra::Base
     authenticateResponseStatus = statusRequest["status"]
     authenticateResponseMessage = statusRequest["message"]
     [200]
-  end
-
-  def defaultJwtSubject
-    {
-        href: "http://localhost:8080/users/id/123",
-        companyhref: "http://localhost:8080/company/id/123",
-        firstName: "fname",
-        lastName: "lName",
-        role: "ADMIN",
-        userName: "userName",
-        emailAddress: "me@me.com",
-    }.to_json
   end
 end
