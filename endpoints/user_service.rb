@@ -54,13 +54,6 @@ class UsersServiceApp < Sinatra::Base
     [200, {'Content-Type'=>'application/json'}, jwtSubject.to_json]
   end
 
-  get '/users/clear' do
-    users = {}
-    companies = {}
-    authenticateResponseStatus = 200
-    authenticateResponseMessage = nil
-  end
-
   get '/users/id/:id' do
     if(authenticateResponseStatus != 200 || authenticateResponseMessage != nil)
       return [authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [authenticateResponseMessage.to_json]]
