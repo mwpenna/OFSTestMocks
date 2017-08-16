@@ -3,7 +3,7 @@ require 'factory_girl'
 require_relative 'support/env'
 require 'uri'
 
-class InventoryApp < Sinatra::Base
+class InventoryServiceApp < Sinatra::Base
 
   inventory = {}
   inventoryResponseStatus = 200

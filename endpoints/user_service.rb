@@ -3,7 +3,7 @@ require 'factory_girl'
 require_relative 'support/env'
 require 'uri'
 
-class UsersApp < Sinatra::Base
+class UsersServiceApp < Sinatra::Base
 
   users = {}
   companies = {}
