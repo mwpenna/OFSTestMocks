@@ -35,7 +35,12 @@ class InventoryServiceApp < Sinatra::Base
     end
 
     inventoryItem = inventory[params["id"]]
-    [200, {'Content-Type'=>'application/json'}, inventoryItem.to_json]
+
+    if(inventoryItem != nil)
+      return [200, {'Content-Type'=>'application/json'}, inventoryItem.to_json]
+    else
+      return [404]
+    end
   end
 
   post '/inventory' do

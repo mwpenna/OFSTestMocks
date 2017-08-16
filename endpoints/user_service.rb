@@ -72,7 +72,12 @@ class UsersServiceApp < Sinatra::Base
     end
 
     user = users[params["id"]]
-    [200, {'Content-Type'=>'application/json'}, user.to_json]
+
+    if(user != nil)
+      [200, {'Content-Type'=>'application/json'}, user.to_json]
+    else
+      [404]
+    end
   end
   
   post '/users' do
