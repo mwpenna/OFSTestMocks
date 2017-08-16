@@ -25,7 +25,17 @@ class InventoryApp < Sinatra::Base
   end
 
   get '/inventory/id/:id' do
+    if(inventoryResponseStatus != 200 || inventoryResponseMessage != nil)
+      return [inventoryResponseStatus.to_i, {'Content-Type'=>'application/json'}, [inventoryResponseMessage.to_json]]
+    end
 
+    authHeader = request.env["HTTP_AUTHORIZATION"]
+    if(authHeader.nil? || !(authHeader.include? "Bearer"))
+      return [403]
+    end
+
+    inventoryItem = inventory[params["id"]]
+    [200, {'Content-Type'=>'application/json'}, inventoryItem.to_json]
   end
 
   post '/inventory' do
