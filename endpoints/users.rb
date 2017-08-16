@@ -60,6 +60,21 @@ class UsersApp < Sinatra::Base
     authenticateResponseStatus = 200
     authenticateResponseMessage = nil
   end
+
+  get '/users/id/:id' do
+    if(authenticateResponseStatus != 200 || authenticateResponseMessage != nil)
+      return [authenticateResponseStatus.to_i, {'Content-Type'=>'application/json'}, [authenticateResponseMessage.to_json]]
+    end
+
+    authHeader = request.env["HTTP_AUTHORIZATION"]
+    if(authHeader.nil? || !(authHeader.include? "Bearer"))
+      return [403]
+    end
+
+    userId = params["id"]
+    user = users[params["id"]]
+    [200, {'Content-Type'=>'application/json'}, user.to_json]
+  end
   
   post '/users' do
 
@@ -93,7 +108,7 @@ class UsersApp < Sinatra::Base
                             firstName: userRequest["firstName"], lastName: userRequest["lastName"], password: userRequest["password"],
                              role: userRequest["role"], activeFlag: userRequest["activeFlag"])
     users[user.id]=user
-    return [201, {'Location'=>base_uri+"/user/id/" + user.id},[]]
+    return [201, {'Location'=>base_uri+"/users/id/" + user.id},[]]
   end
 
   post '/users/authenticate/status' do
