@@ -102,7 +102,7 @@ class UsersApp < Sinatra::Base
     end
 
     userId = SecureRandom.uuid
-    user = FactoryGirl.build(:user, href:base_uri + "users/id/" + userId, id: userId, token: '123', userName:  userRequest["userName"],
+    user = FactoryGirl.build(:user, href:base_uri + "users/id/" + userId, id: userId, token: 'token123', userName:  userRequest["userName"],
                              emailAddress: userRequest["emailAddress"] , company_href: company.href, company_name: company.name,
                             firstName: userRequest["firstName"], lastName: userRequest["lastName"], password: userRequest["password"],
                              role: userRequest["role"], activeFlag: userRequest["activeFlag"])

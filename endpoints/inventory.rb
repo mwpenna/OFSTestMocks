@@ -39,6 +39,20 @@ class InventoryApp < Sinatra::Base
     end
 
     inventoryRequest =  request.env["rack.request.form_hash"]
-    binding.pry
+
+    inventoryId = SecureRandom.uuid
+
+    props = []
+    inventoryRequest["props"].each do |prop|
+      property = FactoryGirl.build(:prop, name: prop["name"], required: nil, type: nil, value: prop["value"])
+      props << property
+    end
+
+    inventoryItem = FactoryGirl.build(:inventory, type: inventoryRequest["type"], price: inventoryRequest["price"],
+                                  quantity: inventoryRequest["quantity"], name: inventoryRequest["name"],
+                                  description: inventoryRequest["description"], companyId: inventoryRequest["companyId"],
+                                  props: props, id: inventoryId, href: base_uri + "/inventory/id/" + inventoryId)
+    inventory[inventoryItem.id] = inventoryItem
+    return [201, {'Location'=>base_uri+"/inventory/id/" + inventoryItem.id},[]]
   end
 end
