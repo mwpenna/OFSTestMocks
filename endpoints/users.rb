@@ -71,7 +71,6 @@ class UsersApp < Sinatra::Base
       return [403]
     end
 
-    userId = params["id"]
     user = users[params["id"]]
     [200, {'Content-Type'=>'application/json'}, user.to_json]
   end
